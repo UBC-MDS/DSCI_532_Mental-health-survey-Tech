@@ -1,17 +1,11 @@
-#
+# tidy_data.R
+# Sabrina Kakei Tse and Ting Pan, Jan 18 2019
 
 # This is a Shiny web application. You can run the application by clicking
-
 # the 'Run App' button above.
 
-#
-
 # Find out more about building applications with Shiny here:
-
-#
-
 #    http://shiny.rstudio.com/
-
 #
 
 
@@ -19,12 +13,14 @@ library(shiny)
 library(tidyverse)
 library(ggplot2)
 
+
 # Load data
-data <- read.csv("../data/survey.csv", stringsAsFactors = FALSE)
+data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   
   # Application title
+  
   titlePanel("Mental Health Survey Data",
              
              windowTitle = "Mental Health app"), 
@@ -41,13 +37,18 @@ ui <- fluidPage(
                                  "Germany", "Ireland", "Netherlands",
                                  "Australia", "France", "India","New Zealand")),
       
+      radioButtons("genderInput", "Gender:",
+                   
+                   choices = c("male", "female", "trans")),
+      
       sliderInput("ageInput",
                   
                   "Age Range:",
                   
-                  min = 1, max = 99,
+                  min = 15, max = 50,
                   
-                  value = c(20,60))
+                  value = c(20,40))
+      
       
       #selectInput("attitudeInput", "Attitude",
                      #choices = c("How easy is it for you to take medical leave for a mental health condition?",
@@ -61,19 +62,69 @@ ui <- fluidPage(
   mainPanel(
     
     tabsetPanel(
-      
-    tabPanel("Personal Background",
-             
-             plotOutput("selfemployed_plot")),
     
-    tabPanel("Work Background", 
+    tabPanel("Company support", 
              
-             plotOutput("options_plot")))
+             plotOutput("benefits_plot"),
+             
+             br(), 
+             
+             plotOutput("options_plot"),
+             
+             br(),
+             
+             plotOutput("program_plot"),
+             
+             br(),
+             
+             plotOutput("help_plot")),
+             
+    
+    
+    
+    tabPanel("Attitudes",
+             
+             "Bring up a mental vs. physical health in interview:",
+             
+             br(), 
+             
+             plotOutput("mental_health_interview_plot"),
+             
+             br(),
+             
+             plotOutput("phys_health_interview_plot"),
+             
+             br(), br(),
+
+             "Mental vs. Physical health consequence:",
+             
+             br(), 
+             
+             plotOutput("mental_health_consequence_plot"),
+             
+             br(),
+             
+             plotOutput("phys_health_consequence_plot"),
+             
+             br(), br(),
+             
+             "Discuss with coworkers vs. supervisor(s):",
+             
+             br(),
+             
+             plotOutput("coworkers_plot"),
+             
+             br(),
+             
+             plotOutput("supervisor_plot")))
+             
+             
+    )
     
     )
   )
 
-)
+
 
 server <- function(input, output){
   
@@ -85,7 +136,7 @@ server <- function(input, output){
       
       filter(Country == input$countryInput,
              
-             seek_help %in% c("Yes","No"),
+             Gender == input$genderInput,
              
              Age < input$ageInput[2],
              
@@ -93,38 +144,261 @@ server <- function(input, output){
     
   })
   
+  
+  
+  output$benefits_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(benefits,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Benefits",
+        
+        y = "",
+        
+        title = "Comparison about benefits")
+    
+  })
+  
+  
   output$options_plot <- renderPlot({
     
     data_filtered() %>% 
       
-      ggplot(aes(care_options,fill = seek_help)) +
+      ggplot(aes(care_options,fill = treatment)) +
       
-      geom_bar() +
-      
-      theme(legend.position = "top") +
+      geom_bar(position='dodge')+
       
       scale_fill_brewer(palette="Set2") +
       
-      theme_bw()
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Care Options",
+        
+        y = "",
+        
+        title = "Comparison about care options")
     
   })
   
-  output$selfemployed_plot <- renderPlot({
+  
+  output$program_plot <- renderPlot({
     
     data_filtered() %>% 
       
-      ggplot(aes(self_employed,fill = seek_help)) +
+      ggplot(aes(wellness_program,fill = treatment)) +
       
-      geom_bar() +
-      
-      theme(legend.position = "top") +
+      geom_bar(position='dodge')+
       
       scale_fill_brewer(palette="Set2") +
       
-      theme_bw()
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Wellness program",
+        
+        y = "",
+        
+        title = "Comparison about wellness program")
     
   })
   
+  
+  output$help_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(seek_help,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Resources of help",
+        
+        y = "",
+        
+        title = "Comparison about resources of help")
+    
+  })
+  
+  
+  
+  output$mental_health_consequence_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(mental_health_consequence,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Mental health consequence",
+        
+        y = "",
+        
+        title = "Comparison about mental health consequence")
+    
+  })
+  
+  
+  output$phys_health_consequence_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(phys_health_consequence,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Physical health consequence",
+        
+        y = "",
+        
+        title = "Comparison about physical health consequence")
+    
+  })
+  
+  
+  
+  output$coworkers_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(coworkers,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Discuss with coworkers",
+        
+        y = "",
+        
+        title = "Comparison about discussing with coworkers")
+    
+  })
+  
+  
+  output$supervisor_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(supervisor,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Discuss with supervisor(s)",
+        
+        y = "",
+        
+        title = "Comparison about discussing with supervisor(s)")
+    
+  })
+  
+  
+  output$mental_health_interview_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(mental_health_interview,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Mental health in interview",
+        
+        y = "",
+        
+        title = "Comparison about mental health in interview")
+    
+  })
+
+  
+  
+  output$phys_health_interview_plot <- renderPlot({
+    
+    data_filtered() %>% 
+      
+      ggplot(aes(phys_health_interview,fill = treatment)) +
+      
+      geom_bar(position='dodge')+
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      coord_flip() +
+      
+      labs(
+        
+        x = "Physical health in interview",
+        
+        y = "",
+        
+        title = "Comparison about physical health in interview")
+    
+  })
+  
+
 }
 
 shinyApp(ui = ui, server = server)
