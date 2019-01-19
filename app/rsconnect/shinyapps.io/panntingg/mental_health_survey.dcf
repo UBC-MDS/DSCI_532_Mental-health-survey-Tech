@@ -1,0 +1,12 @@
+name: mental_health_survey
+title: mental_health_survey
+username:
+account: panntingg
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 655188
+bundleId: 1823566
+url: https://panntingg.shinyapps.io/mental_health_survey/
+when: 1547877346.15444
+asMultiple: FALSE
+asStatic: FALSE
