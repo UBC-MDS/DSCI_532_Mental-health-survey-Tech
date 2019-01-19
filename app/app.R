@@ -15,7 +15,7 @@ library(ggplot2)
 
 
 # Load data
-data <- read.csv("../data/tidy_data.csv", stringsAsFactors = FALSE)
+data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   
