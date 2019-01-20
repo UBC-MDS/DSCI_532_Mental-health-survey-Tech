@@ -25,6 +25,8 @@ Our application interface has three components:
  - **Tabs**: Visualization by areas of interest
      - Rationale: Having the "Corporate Support" and "Attitude" tabs allow users to explore the availability of corporate resources and how they influence the receipt of mental health treatment.
 
+![](../img/screenshot.PNG)
+
 ## Data Abstraction 
 
 Our application focuses on showing differences in the general attitude of different segmentations towards the corporate mental health issues. Our application breaks down the data by the following hierachy:
@@ -42,7 +44,7 @@ Our application focuses on showing differences in the general attitude of differ
     This is presented in range so users can choose the range to segment.
 
 
-**Final layer ** - areas of interest
+ **Final layer ** - areas of interest
 
 - Variables under "Corporate Support" 
     - "Benefits", indicating whether the company has mental health benefits

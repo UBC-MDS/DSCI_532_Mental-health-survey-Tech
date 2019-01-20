@@ -3,10 +3,12 @@
 
 ### Proposal
 
-https://github.com/sabrinatkk/DSCI_532_Mental-health-tech/blob/master/doc/Proposal.md
+
+
+### Milestone 2
 
 
 
-## Product:
+### Product:
 
 https://panntingg.shinyapps.io/mental_health_survey/ 
