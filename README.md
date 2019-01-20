@@ -3,9 +3,10 @@
 
 ### Proposal
 
-
-https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/Proposal.md
-
+https://github.com/sabrinatkk/DSCI_532_Mental-health-tech/blob/master/doc/Proposal.md
 
 
-Deployed Shiny App: https://panntingg.shinyapps.io/mental_health_survey/ 
+
+## Product:
+
+https://panntingg.shinyapps.io/mental_health_survey/ 
