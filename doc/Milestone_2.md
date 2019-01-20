@@ -43,8 +43,7 @@ Our application focuses on showing differences in the general attitude of differ
  - Age :
     This is presented in range so users can choose the range to segment.
 
-
- **Final layer ** - areas of interest
+ **Final layer** - areas of interest
 
 - Variables under "Corporate Support" 
     - "Benefits", indicating whether the company has mental health benefits
