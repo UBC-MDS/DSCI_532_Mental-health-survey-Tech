@@ -9,6 +9,7 @@
 #
 
 
+# Load packages
 library(shiny)
 library(tidyverse)
 library(ggplot2)
@@ -25,7 +26,7 @@ ui <- fluidPage(
              
              windowTitle = "Mental Health app"), 
   
-  # Sidebar with a select input for countries
+  # Sidebar with selection for countries, gender, age, and question of interest
   
   sidebarLayout(
     
@@ -63,22 +64,30 @@ ui <- fluidPage(
     
     tabsetPanel(
     
+    # First Tab - Corporate Support
+    
     tabPanel("Corporate Support", 
              
              h5("For your selected group of employees, how the the availability of corporate resources influence the receipt of mental health treatment:"),
              
              fluidRow(
+               
+               # Display the four plots
+               
                splitLayout(cellWidths = c("50%", "50%"), plotOutput("benefits_plot"), plotOutput("options_plot")),
-               splitLayout(cellWidths = c("50%", "50%"), plotOutput("program_plot"), plotOutput("help_plot")))
-               ),
+               splitLayout(cellWidths = c("50%", "50%"), plotOutput("program_plot"), plotOutput("help_plot"))
+               
+               )),
     
+    # Second Tab - Attitudes of Question
     
     tabPanel("Attitudes of Question",
-             
              
              h5("For your selected group of employees, how they response to the question:"),
              
              column(10, align="center",
+             
+             # Display the attitude plot
                     
              plotOutput("plot")))
              
@@ -90,6 +99,8 @@ ui <- fluidPage(
 server <- function(input, output){
   
   observe(print(input$countryInput))
+  
+  # Filter data
   
   data_filtered <- reactive({
     
@@ -115,6 +126,7 @@ server <- function(input, output){
     })
     
   
+  # Benefits Plot
   
   output$benefits_plot <- renderPlot({
     
@@ -136,7 +148,7 @@ server <- function(input, output){
         
         y = "",
         
-        title = "Comparison about benefits",
+        title = "Benefits",
         
         subtitle = "whether the company has mental health benefits" ) +
       
@@ -160,6 +172,8 @@ server <- function(input, output){
   })
   
   
+  # Care Options Plot
+  
   output$options_plot <- renderPlot({
     
     data_filtered() %>% 
@@ -180,7 +194,7 @@ server <- function(input, output){
         
         y = "",
         
-        title = "Comparison about care options",
+        title = "Care Options",
         
         subtitle = "whether the employees know about the mental health \n care options provided at work" ) +
       
@@ -202,7 +216,9 @@ server <- function(input, output){
       )
     
   })
+
   
+  # Wellness Program Plot
   
   output$program_plot <- renderPlot({
     
@@ -224,7 +240,7 @@ server <- function(input, output){
         
         y = "",
         
-        title = "Comparison about wellness program",
+        title = "Wellness Program",
     
         subtitle = "whether the individual has discussed about mental \n health wellness program with their employer" ) +
       
@@ -248,6 +264,8 @@ server <- function(input, output){
   })
   
   
+  # Help Plot
+  
   output$help_plot <- renderPlot({
     
     data_filtered() %>% 
@@ -268,7 +286,7 @@ server <- function(input, output){
         
         y = "",
         
-        title = "Comparison about resources of help",
+        title = "Resources of Help",
         
         subtitle = "whether the employer has provide resources to \n learn more about mental health issues and how to seek help") +
       
@@ -291,6 +309,8 @@ server <- function(input, output){
     
   })
   
+  
+  # Attitude Plot
   
   output$plot <- renderPlot({
     
