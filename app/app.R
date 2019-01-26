@@ -9,6 +9,7 @@
 #
 
 
+# Load packages
 library(shiny)
 library(tidyverse)
 library(ggplot2)
@@ -25,21 +26,21 @@ ui <- fluidPage(
              
              windowTitle = "Mental Health app"), 
   
-  # Sidebar with a select input for countries
+  # Sidebar with selection for countries, gender, age, and question of interest
   
   sidebarLayout(
     
     sidebarPanel(
       
-      radioButtons("countryInput", "Country:",
+      selectInput("countryInput", "Country:",
                    
-                     choices = c("United States", "Canada", "United Kingdom", 
+                     choices = c("All", "United States", "Canada", "United Kingdom", 
                                  "Germany", "Ireland", "Netherlands",
                                  "Australia", "France", "India","New Zealand")),
       
       radioButtons("genderInput", "Gender:",
                    
-                   choices = c("male", "female", "trans")),
+                   choices = c("All", "Male", "Female", "Other")),
       
       sliderInput("ageInput",
                   
@@ -47,82 +48,51 @@ ui <- fluidPage(
                   
                   min = 15, max = 50,
                   
-                  value = c(20,40))
+                  value = c(15,50)),
       
       
-      #selectInput("attitudeInput", "Attitude",
-                     #choices = c("How easy is it for you to take medical leave for a mental health condition?",
-                                 #"Do you think that discussing a health issue with your employer would have negative consequences?",
-                                 #"Would you be willing to discuss a mental health issue with your colleagues?",
-                                 #"Would you bring up a health issue with a potential employer in an interview?",
-                                 #"Do you feel that your employer takes mental health as seriously as physical health?",
-                                 #"Have you heard of or observed negative consequences for coworkers with mental health conditions in your workplace?"))
+      selectInput("attitudeInput", "Question:",
+                     choices = c("Would you bring up a mental health issue with a potential employer in an interview?"="mental_health_interview",
+                                 "Do you think that discussing a mental health issue with your employer would have negative consequences?"="mental_health_consequence",
+                                 "Would you be willing to discuss a mental health issue with your colleagues?"="coworkers",
+                                 "Would you be willing to discuss a mental health issue with your supervisor(s)?"="supervisor",
+                                 "Do you feel that your employer takes mental health as seriously as physical health?"="mental_vs_physical",
+                                 "Have you heard of or observed negative consequences for coworkers with mental health conditions in your workplace?"="obs_consequence"))
   ),
   
   mainPanel(
     
     tabsetPanel(
     
-    tabPanel("Company support", 
-             
-             plotOutput("benefits_plot"),
-             
-             br(), 
-             
-             plotOutput("options_plot"),
-             
-             br(),
-             
-             plotOutput("program_plot"),
-             
-             br(),
-             
-             plotOutput("help_plot")),
-             
+    # First Tab - Corporate Support
     
+    tabPanel("Corporate Support", 
+             
+             h5("For your selected group of employees, how the the availability of corporate resources influence the receipt of mental health treatment:"),
+             
+             fluidRow(
+               
+               # Display the four plots
+               
+               splitLayout(cellWidths = c("50%", "50%"), plotOutput("benefits_plot"), plotOutput("options_plot")),
+               splitLayout(cellWidths = c("50%", "50%"), plotOutput("program_plot"), plotOutput("help_plot"))
+               
+               )),
     
+    # Second Tab - Attitudes of Question
     
-    tabPanel("Attitudes",
+    tabPanel("Attitudes of Question",
              
-             "Bring up a mental vs. physical health in interview:",
+             h5("For your selected group of employees, how they response to the question:"),
              
-             br(), 
+             column(10, align="center",
              
-             plotOutput("mental_health_interview_plot"),
-             
-             br(),
-             
-             plotOutput("phys_health_interview_plot"),
-             
-             br(), br(),
-
-             "Mental vs. Physical health consequence:",
-             
-             br(), 
-             
-             plotOutput("mental_health_consequence_plot"),
-             
-             br(),
-             
-             plotOutput("phys_health_consequence_plot"),
-             
-             br(), br(),
-             
-             "Discuss with coworkers vs. supervisor(s):",
-             
-             br(),
-             
-             plotOutput("coworkers_plot"),
-             
-             br(),
-             
-             plotOutput("supervisor_plot")))
+             # Display the attitude plot
+                    
+             plotOutput("plot")))
              
              
-    )
-    
-    )
-  )
+    ))))
 
 
 
@@ -130,21 +100,33 @@ server <- function(input, output){
   
   observe(print(input$countryInput))
   
+  # Filter data
+  
   data_filtered <- reactive({
     
     data %>% 
       
-      filter(Country == input$countryInput,
+      dplyr::filter(if (input$countryInput != "All"){
+        
+                 Country == input$countryInput}
              
-             Gender == input$genderInput,
+             else {Country == data$Country},
+             
+             
+             if (input$genderInput != "All"){ 
+             
+                 Gender == input$genderInput}
+             
+             else {Gender == data$Gender},
+             
              
              Age < input$ageInput[2],
              
              Age > input$ageInput[1])
+    })
     
-  })
   
-  
+  # Benefits Plot
   
   output$benefits_plot <- renderPlot({
     
@@ -162,14 +144,35 @@ server <- function(input, output){
       
       labs(
         
-        x = "Benefits",
+        x = "",
         
         y = "",
         
-        title = "Comparison about benefits")
+        title = "Benefits",
+        
+        subtitle = "whether the company has mental health benefits" ) +
+      
+      theme(
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12),
+        
+        legend.position=c(1,1),
+        
+        legend.justification=c(1, 0),
+        
+        legend.direction="horizontal"
+      )
     
   })
   
+  
+  # Care Options Plot
   
   output$options_plot <- renderPlot({
     
@@ -187,14 +190,35 @@ server <- function(input, output){
       
       labs(
         
-        x = "Care Options",
+        x = "",
         
         y = "",
         
-        title = "Comparison about care options")
+        title = "Care Options",
+        
+        subtitle = "whether the employees know about the mental health \n care options provided at work" ) +
+      
+      theme(
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12),
+        
+        legend.position=c(1,1),
+        
+        legend.justification=c(1, 0),
+        
+        legend.direction="horizontal"
+      )
     
   })
+
   
+  # Wellness Program Plot
   
   output$program_plot <- renderPlot({
     
@@ -212,14 +236,35 @@ server <- function(input, output){
       
       labs(
         
-        x = "Wellness program",
+        x = "",
         
         y = "",
         
-        title = "Comparison about wellness program")
+        title = "Wellness Program",
+    
+        subtitle = "whether the individual has discussed about mental \n health wellness program with their employer" ) +
+      
+      theme(
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12),
+        
+        legend.position=c(1,1),
+        
+        legend.justification=c(1, 0),
+        
+        legend.direction="horizontal"
+      )
     
   })
   
+  
+  # Help Plot
   
   output$help_plot <- renderPlot({
     
@@ -237,166 +282,75 @@ server <- function(input, output){
       
       labs(
         
-        x = "Resources of help",
+        x = "",
         
         y = "",
         
-        title = "Comparison about resources of help")
+        title = "Resources of Help",
+        
+        subtitle = "whether the employer has provide resources to \n learn more about mental health issues and how to seek help") +
+      
+      theme(
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12),
+        
+        legend.position=c(1,1),
+        
+        legend.justification=c(1, 0),
+        
+        legend.direction="horizontal"
+      )
     
   })
   
   
+  # Attitude Plot
   
-  output$mental_health_consequence_plot <- renderPlot({
+  output$plot <- renderPlot({
     
     data_filtered() %>% 
       
-      ggplot(aes(mental_health_consequence,fill = treatment)) +
+      ggplot(aes(get(input$attitudeInput),fill=get(input$attitudeInput))) +
       
-      geom_bar(position='dodge')+
+      geom_bar(position='dodge', show.legend=FALSE)+
       
       scale_fill_brewer(palette="Set2") +
       
       theme_bw() +
       
-      coord_flip() +
       
       labs(
         
-        x = "Mental health consequence",
+        x = "response",
         
-        y = "",
+        y = "count",
         
-        title = "Comparison about mental health consequence")
+        title = input$attitudeInput)+
+      
+      theme(
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12),
+        
+        legend.position=c(1,1),
+        
+        legend.justification=c(1, 0),
+        
+        legend.direction="horizontal"
+      )
     
-  })
-  
-  
-  output$phys_health_consequence_plot <- renderPlot({
-    
-    data_filtered() %>% 
-      
-      ggplot(aes(phys_health_consequence,fill = treatment)) +
-      
-      geom_bar(position='dodge')+
-      
-      scale_fill_brewer(palette="Set2") +
-      
-      theme_bw() +
-      
-      coord_flip() +
-      
-      labs(
-        
-        x = "Physical health consequence",
-        
-        y = "",
-        
-        title = "Comparison about physical health consequence")
-    
-  })
-  
-  
-  
-  output$coworkers_plot <- renderPlot({
-    
-    data_filtered() %>% 
-      
-      ggplot(aes(coworkers,fill = treatment)) +
-      
-      geom_bar(position='dodge')+
-      
-      scale_fill_brewer(palette="Set2") +
-      
-      theme_bw() +
-      
-      coord_flip() +
-      
-      labs(
-        
-        x = "Discuss with coworkers",
-        
-        y = "",
-        
-        title = "Comparison about discussing with coworkers")
-    
-  })
-  
-  
-  output$supervisor_plot <- renderPlot({
-    
-    data_filtered() %>% 
-      
-      ggplot(aes(supervisor,fill = treatment)) +
-      
-      geom_bar(position='dodge')+
-      
-      scale_fill_brewer(palette="Set2") +
-      
-      theme_bw() +
-      
-      coord_flip() +
-      
-      labs(
-        
-        x = "Discuss with supervisor(s)",
-        
-        y = "",
-        
-        title = "Comparison about discussing with supervisor(s)")
-    
-  })
-  
-  
-  output$mental_health_interview_plot <- renderPlot({
-    
-    data_filtered() %>% 
-      
-      ggplot(aes(mental_health_interview,fill = treatment)) +
-      
-      geom_bar(position='dodge')+
-      
-      scale_fill_brewer(palette="Set2") +
-      
-      theme_bw() +
-      
-      coord_flip() +
-      
-      labs(
-        
-        x = "Mental health in interview",
-        
-        y = "",
-        
-        title = "Comparison about mental health in interview")
-    
-  })
-
-  
-  
-  output$phys_health_interview_plot <- renderPlot({
-    
-    data_filtered() %>% 
-      
-      ggplot(aes(phys_health_interview,fill = treatment)) +
-      
-      geom_bar(position='dodge')+
-      
-      scale_fill_brewer(palette="Set2") +
-      
-      theme_bw() +
-      
-      coord_flip() +
-      
-      labs(
-        
-        x = "Physical health in interview",
-        
-        y = "",
-        
-        title = "Comparison about physical health in interview")
-    
-  })
+  },height = 400, width = 600)
   
 
 }
