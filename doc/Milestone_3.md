@@ -29,11 +29,11 @@ The biggest improvement we are proud is the visualization. With facceting, we ha
 
 *Before*
 
-![](img/screenshot.PNG)
+![](https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/img/screenshot.PNG)
 
 *After*
     
-![](img/screenshot_new.PNG)
+![](https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/img/screenshot_new.PNG)
 
 ### Reflection from peer review
 
