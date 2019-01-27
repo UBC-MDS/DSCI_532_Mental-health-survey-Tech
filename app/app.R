@@ -16,7 +16,7 @@ library(ggplot2)
 
 
 # Load data
-data <- read.csv("../data/tidy_data.csv", stringsAsFactors = FALSE)
+data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   
@@ -83,7 +83,7 @@ ui <- fluidPage(
     
     tabPanel("Attitudes",
              
-             h5("In this section, employees'responses to the attitude questions are summarized in graphs."),
+             h5("In this section, employees' responses to the attitude questions are summarized in graphs."),
              
              column(10, align="center",
              
@@ -106,7 +106,7 @@ server <- function(input, output){
     
     data %>% 
       
-      dplyr::filter(if (input$countryInput != "All"){
+      filter(if (input$countryInput != "All"){
         
                  Country == input$countryInput}
              
