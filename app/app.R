@@ -16,7 +16,7 @@ library(ggplot2)
 
 
 # Load data
-data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
+data <- read.csv("../data/tidy_data.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   
@@ -30,7 +30,7 @@ ui <- fluidPage(
   
   sidebarLayout(
     
-    sidebarPanel(
+    sidebarPanel( 
       
       selectInput("countryInput", "Country:",
                    
@@ -51,13 +51,13 @@ ui <- fluidPage(
                   value = c(15,50)),
       
       
-      selectInput("attitudeInput", "Question:",
+      selectInput("attitudeInput", "Survey Questions:",
                      choices = c("Would you bring up a mental health issue with a potential employer in an interview?"="mental_health_interview",
                                  "Do you think that discussing a mental health issue with your employer would have negative consequences?"="mental_health_consequence",
                                  "Would you be willing to discuss a mental health issue with your colleagues?"="coworkers",
                                  "Would you be willing to discuss a mental health issue with your supervisor(s)?"="supervisor",
                                  "Do you feel that your employer takes mental health as seriously as physical health?"="mental_vs_physical",
-                                 "Have you heard of or observed negative consequences for coworkers with mental health conditions in your workplace?"="obs_consequence"))
+                                 "Have you heard of or observed negative consequences for coworkers with mental health conditions in your workplace?"="obs_consequence")),width = 3
   ),
   
   mainPanel(
@@ -68,7 +68,7 @@ ui <- fluidPage(
     
     tabPanel("Corporate Support", 
              
-             h5("For your selected group of employees, how the the availability of corporate resources influence the receipt of mental health treatment:"),
+             h5("In this section, we have summarized how the avaiability of corporate resources affect the number of individuals received mental health treament and those who did not or have not received treatment."),
              
              fluidRow(
                
@@ -81,9 +81,9 @@ ui <- fluidPage(
     
     # Second Tab - Attitudes of Question
     
-    tabPanel("Attitudes of Question",
+    tabPanel("Attitudes",
              
-             h5("For your selected group of employees, how they response to the question:"),
+             h5("In this section, employees'responses to the attitude questions are summarized in graphs."),
              
              column(10, align="center",
              
@@ -196,7 +196,7 @@ server <- function(input, output){
         
         title = "Care Options",
         
-        subtitle = "whether the employees know about the mental health \n care options provided at work" ) +
+        subtitle = "whether the individual knows about the mental health \n care options provided at work" ) +
       
       theme(
         
@@ -288,7 +288,7 @@ server <- function(input, output){
         
         title = "Resources of Help",
         
-        subtitle = "whether the employer has provide resources to \n learn more about mental health issues and how to seek help") +
+        subtitle = "whether the employer has provided resources to \n learn more about mental health issues and how to seek help") +
       
       theme(
         
