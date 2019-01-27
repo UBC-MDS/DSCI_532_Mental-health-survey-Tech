@@ -27,12 +27,13 @@ With our objectives of the application unchanged, we improved our application ba
 
 The biggest improvement we are proud is the visualization. With facceting, we have fitted four variables within the display without users having to scroll up and down as before. We have also added more details under each graph to explain what the variables they are. Here is the before-and-after comparison:
 
-    Before
-    ![](img/screenshot.PNG)
+*Before*
 
-    After
+![](img/screenshot.PNG)
+
+*After*
     
-    ![](img/screenshot_new.PNG)
+![](img/screenshot_new.PNG)
 
 ### Reflection from peer review
 

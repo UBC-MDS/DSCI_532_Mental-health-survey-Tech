@@ -11,7 +11,7 @@ https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/doc/Mi
 
 ### Milestone 3
 
-Reflection and improvement : 
+Reflection and improvement : https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/doc/Milestone_3.md
 
 feedback 1: https://github.com/UBC-MDS/DSCI_532_Suicide_Statistics/issues/9
 
