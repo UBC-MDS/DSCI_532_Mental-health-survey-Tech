@@ -68,6 +68,7 @@ ui <- fluidPage(
     
     tabPanel("Corporate Support", 
              
+             
              h5("In this section, we have summarized how the avaiability of corporate resources affect the number of individuals received mental health treament and those who did not or have not received treatment."),
              
              fluidRow(
@@ -89,7 +90,20 @@ ui <- fluidPage(
              
              # Display the attitude plot
                     
-             plotOutput("plot")))
+             plotOutput("plot"))),
+    
+    # Third Tab - Info about dataset
+    
+    tabPanel("About",
+             
+             h5("In this section,"),
+             
+             column(10, align="center",
+             
+             plotOutput("country_plot"),
+             
+             plotOutput("gender_plot")))
+             
              
              
     ))))
@@ -124,9 +138,121 @@ server <- function(input, output){
              
              Age > input$ageInput[1])
     })
-    
   
+  # Data count for each country
+  
+  data_info <- reactive({
+    
+    data %>% 
+      
+      group_by(Country) %>% 
+      
+      summarise(n=n()) %>% 
+      
+      arrange(desc(n)) %>% 
+      
+      head(10)
+    
+  })
+  
+  # Data count for gender
+  
+  data_info_gender <- reactive({
+    
+    data %>% 
+      
+      group_by(Gender) %>% 
+      
+      summarise(n=n()) %>% 
+      
+      arrange(desc(n))
+    
+  })
+  
+  # Plot of data Count for each country
+  
+  
+  output$country_plot <- renderPlot({
+    
+    data_info() %>% 
+      
+      ggplot(aes(x = Country,y = n)) +
+      
+      geom_bar(stat = "identity") +
+      
+      geom_text(aes(label=n), position=position_dodge(width=0.9), vjust=-0.25) +
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      labs(
+        
+        x = "country",
+        
+        y = "count",
+        
+        title = "country vs. observations count") +
+      
+      theme(
+        
+        axis.text.x = element_text(angle = 45, hjust = 1 ),
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12)
+      )
+    
+  },height = 400, width = 600)
+  
+  
+  # Plot of data Count for gender
+  
+  
+  output$gender_plot <- renderPlot({
+    
+    data_info_gender() %>% 
+      
+      ggplot(aes(x = Gender,y = n)) +
+      
+      geom_bar(stat = "identity") +
+      
+      geom_text(aes(label=n), position=position_dodge(width=0.9), vjust=-0.25) +
+      
+      scale_fill_brewer(palette="Set2") +
+      
+      theme_bw() +
+      
+      labs(
+        
+        x = "gender",
+        
+        y = "count",
+        
+        title = "gender vs. observations count") +
+      
+      theme(
+      
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12)
+      )
+    
+  },height = 400, width = 600)
+  
+  
+    
   # Benefits Plot
+  
   
   output$benefits_plot <- renderPlot({
     
