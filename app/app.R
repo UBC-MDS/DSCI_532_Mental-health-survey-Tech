@@ -96,7 +96,7 @@ ui <- fluidPage(
     
     tabPanel("About",
              
-             h5("In this section,"),
+             h5("In this section, the number of observations per country and per gender are plotted in bar graphs. NOTE: this tab is meant for general information only so it is not interactive with the filtered options"),
              
              column(10, align="center",
              
