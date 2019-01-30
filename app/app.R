@@ -19,7 +19,7 @@ library(shinythemes)
 # Load data
 data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
 
-ui <- fluidPage( theme = shinytheme("readable"),
+ui <- fluidPage( theme = shinytheme("simplex"),
   
   # Application title
   
@@ -47,9 +47,9 @@ ui <- fluidPage( theme = shinytheme("readable"),
                   
                   "Age Range:",
                   
-                  min = 15, max = 50,
+                  min = 15, max = 60,
                   
-                  value = c(15,50)),
+                  value = c(15,60)),
       
       
       selectInput("attitudeInput", "Survey Questions:",
@@ -91,7 +91,7 @@ ui <- fluidPage( theme = shinytheme("readable"),
              
              br(),
              
-             column(10, align="center",
+             column(12, align="center",
              
              # Display the attitude plot
                     
@@ -107,17 +107,18 @@ ui <- fluidPage( theme = shinytheme("readable"),
              
              br(),
              
-             column(10, align="center",
+             column(12, align="center",
              
              plotOutput("country_plot"),
              
              br(),
              
-             plotOutput("gender_plot")))
+             fluidRow(
+             
+               splitLayout(cellWidths = c("40%", "60%"), plotOutput("gender_plot"), plotOutput("age_plot"))))
              
              
-             
-    ))))
+    )))))
 
 
 
@@ -181,6 +182,25 @@ server <- function(input, output){
   })
   
   
+  # Data count for age group
+  
+  data_info_age <- reactive({
+    
+    data %>% 
+      mutate(agegroup= factor(case_when(
+        .$Age <  20 ~ "<20",
+        .$Age >= 20 & .$Age <= 29 ~ "20-29",
+        .$Age >= 30 & .$Age <= 39 ~"30-39",
+        .$Age >= 40 & .$Age <= 49 ~  "40-49",
+        .$Age >= 50 ~ ">50"))) %>% 
+      
+      group_by(agegroup) %>% 
+      
+      summarise(n=n())
+    
+  })
+  
+  
   # Plot of data count for each country
   
   
@@ -209,7 +229,7 @@ server <- function(input, output){
         
         axis.text.x = element_text(angle = 45, hjust = 1 ),
         
-        plot.title = element_text(size=16, face="bold.italic"),
+        plot.title = element_text(size=14, face="bold.italic"),
         
         axis.title.x = element_text(size=14, face="bold"),
         
@@ -247,7 +267,7 @@ server <- function(input, output){
       theme(
       
         
-        plot.title = element_text(size=16, face="bold.italic"),
+        plot.title = element_text(size=14, face="bold.italic"),
         
         axis.title.x = element_text(size=14, face="bold"),
         
@@ -256,7 +276,49 @@ server <- function(input, output){
         axis.text = element_text(size=12)
       )
     
-  },height = 400, width = 700)
+  })
+  
+  
+  
+  # Plot of data count for age
+  
+  
+  output$age_plot <- renderPlot({
+    
+    data_info_age() %>% 
+      
+      ggplot(aes(x = agegroup,y = n)) +
+      
+      geom_bar(stat = "identity", width = 0.5, fill = "#66C2A5") +
+      
+      scale_x_discrete(limits=c("<20","20-29","30-39","40-49",">50")) +
+      
+      geom_text(aes(label=n), position=position_dodge(width=0.9), vjust=-0.25) +
+      
+      theme_bw() +
+      
+      labs(
+        
+        x = "age",
+        
+        y = "count",
+        
+        title = "age vs. observations count") +
+      
+      theme(
+        
+        
+        plot.title = element_text(size=14, face="bold.italic"),
+        
+        axis.title.x = element_text(size=14, face="bold"),
+        
+        axis.title.y = element_text(size=14, face="bold"),
+        
+        axis.text = element_text(size=12)
+      )
+    
+  })
+  
   
   
     
