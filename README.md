@@ -19,6 +19,10 @@ feedback 2: https://github.com/UBC-MDS/DSCI-532_Linyang-Alex/issues/24
 
 feedback 3:https://github.com/UBC-MDS/DSCI_532_Arzan_Brenden/issues/13#issue-401539160
 
+### Milestone 4
+
+https://github.com/UBC-MDS/DSCI_532_Mental-health-survey-Tech/blob/master/doc/Milestone_4.md
+
 
 
 ### Product:

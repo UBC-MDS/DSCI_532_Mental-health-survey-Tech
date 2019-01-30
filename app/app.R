@@ -101,7 +101,7 @@ ui <- fluidPage( theme = shinytheme("simplex"),
     
     tabPanel("About",
              
-             h5("In this section, the number of observations per country and per gender are plotted in bar graphs."),
+             h5("In this section, the number of observations per country, gender and age group are plotted in bar graphs."),
              
              h5("NOTE: this tab is meant for general information only so it is not interactive with the filtered options"),
              
