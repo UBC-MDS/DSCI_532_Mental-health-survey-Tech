@@ -13,12 +13,13 @@
 library(shiny)
 library(tidyverse)
 library(ggplot2)
+library(shinythemes)
 
 
 # Load data
 data <- read.csv("tidy_data.csv", stringsAsFactors = FALSE)
 
-ui <- fluidPage(
+ui <- fluidPage( theme = shinytheme("readable"),
   
   # Application title
   
@@ -71,6 +72,8 @@ ui <- fluidPage(
              
              h5("In this section, we have summarized how the avaiability of corporate resources affect the number of individuals received mental health treament and those who did not or have not received treatment."),
              
+             br(),
+             
              fluidRow(
                
                # Display the four plots
@@ -86,6 +89,8 @@ ui <- fluidPage(
              
              h5("In this section, employees' responses to the attitude questions are summarized in graphs."),
              
+             br(),
+             
              column(10, align="center",
              
              # Display the attitude plot
@@ -96,11 +101,17 @@ ui <- fluidPage(
     
     tabPanel("About",
              
-             h5("In this section, the number of observations per country and per gender are plotted in bar graphs. NOTE: this tab is meant for general information only so it is not interactive with the filtered options"),
+             h5("In this section, the number of observations per country and per gender are plotted in bar graphs."),
+             
+             h5("NOTE: this tab is meant for general information only so it is not interactive with the filtered options"),
+             
+             br(),
              
              column(10, align="center",
              
              plotOutput("country_plot"),
+             
+             br(),
              
              plotOutput("gender_plot")))
              
@@ -169,7 +180,8 @@ server <- function(input, output){
     
   })
   
-  # Plot of data Count for each country
+  
+  # Plot of data count for each country
   
   
   output$country_plot <- renderPlot({
@@ -178,11 +190,10 @@ server <- function(input, output){
       
       ggplot(aes(x = Country,y = n)) +
       
-      geom_bar(stat = "identity") +
+      geom_bar(stat = "identity", fill = "#FC8D62") +
       
       geom_text(aes(label=n), position=position_dodge(width=0.9), vjust=-0.25) +
       
-      scale_fill_brewer(palette="Set2") +
       
       theme_bw() +
       
@@ -198,7 +209,7 @@ server <- function(input, output){
         
         axis.text.x = element_text(angle = 45, hjust = 1 ),
         
-        plot.title = element_text(size=14, face="bold.italic"),
+        plot.title = element_text(size=16, face="bold.italic"),
         
         axis.title.x = element_text(size=14, face="bold"),
         
@@ -207,10 +218,10 @@ server <- function(input, output){
         axis.text = element_text(size=12)
       )
     
-  },height = 400, width = 600)
+  },height = 400, width = 700)
   
   
-  # Plot of data Count for gender
+  # Plot of data count for gender
   
   
   output$gender_plot <- renderPlot({
@@ -219,11 +230,9 @@ server <- function(input, output){
       
       ggplot(aes(x = Gender,y = n)) +
       
-      geom_bar(stat = "identity") +
+      geom_bar(stat = "identity", width = 0.5, fill = "#66C2A5") +
       
       geom_text(aes(label=n), position=position_dodge(width=0.9), vjust=-0.25) +
-      
-      scale_fill_brewer(palette="Set2") +
       
       theme_bw() +
       
@@ -238,7 +247,7 @@ server <- function(input, output){
       theme(
       
         
-        plot.title = element_text(size=14, face="bold.italic"),
+        plot.title = element_text(size=16, face="bold.italic"),
         
         axis.title.x = element_text(size=14, face="bold"),
         
@@ -247,7 +256,7 @@ server <- function(input, output){
         axis.text = element_text(size=12)
       )
     
-  },height = 400, width = 600)
+  },height = 400, width = 700)
   
   
     
@@ -444,7 +453,7 @@ server <- function(input, output){
       
       ggplot(aes(get(input$attitudeInput),fill=get(input$attitudeInput))) +
       
-      geom_bar(position='dodge', show.legend=FALSE)+
+      geom_bar(position='dodge', show.legend=FALSE, width = 0.5)+
       
       scale_fill_brewer(palette="Set2") +
       
@@ -476,7 +485,7 @@ server <- function(input, output){
         legend.direction="horizontal"
       )
     
-  },height = 400, width = 600)
+  },height = 400, width = 700)
   
 
 }
