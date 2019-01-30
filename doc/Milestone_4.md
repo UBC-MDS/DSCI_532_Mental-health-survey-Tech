@@ -19,14 +19,11 @@ The effectiveness of the change with respect to your app's objective.
 
 ### Reflection
 
-If we were to make the app again from scratch, we would opt for using plotly instead of ggplot (for more interactive features). I would also use template instead for better user interface design...
+If we were to make the app again from scratch, we would opt for using plotly instead of ggplot (for more interactive features). We would also use template instead for better user interface design.
 
+The greatest challenges we had while developing this application is the pairwise comparison on the interview questions. The questions were designed to compare two different scenarios that we thought the comparison would be interesting to show. (i.e.how comfortable you are to discuss mental issues with your coworker versus your manager?) 
 
-What were the greatest challenges you faced in creating the final product?
-
-- Pairwise comparison
-
-
+While we could achieve the comparison by doing a major data wrangling and then producing the responsive graphs based on filters in Shiny App, we are under a strict time limitation for us to do that.
 
 
 --------------------------------------------------------------------------------------------------------
